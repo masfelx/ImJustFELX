@@ -1,1 +1,36 @@
-[]
+[
+  {
+    "id": "local-1794535524628-7wxti",
+    "author_name": "Anonim",
+    "author_handle": "@anonim",
+    "content": "allowwww",
+    "avatar_color": "bg-cyan-600",
+    "likes": 0,
+    "created_at": "2026-11-13T02:05:24.628Z",
+    "replies": [],
+    "is_vip": false
+  },
+  {
+    "id": "local-1794535487290-rm3ib",
+    "author_name": "Anonim",
+    "author_handle": "@anonim",
+    "content": "Haii",
+    "avatar_color": "bg-blue-600",
+    "likes": 0,
+    "created_at": "2026-11-13T02:04:47.290Z",
+    "replies": [],
+    "is_vip": false
+  },
+  {
+    "id": "local-1794452813074-o3mct",
+    "author_name": "Kepo",
+    "author_handle": "@kepo",
+    "content": "Gini kan ya?",
+    "avatar_color": "bg-rose-600",
+    "likes": 1,
+    "created_at": "2026-11-12T03:06:53.074Z",
+    "replies": [],
+    "is_vip": false,
+    "image_url": "https://ebtwgnsgdtpbsmyhwhba.supabase.co/storage/v1/object/public/cerita-photos/cerita-1794452812068-c0rzvy.webp"
+  }
+]

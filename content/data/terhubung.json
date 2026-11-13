@@ -8,15 +8,21 @@
     },
     {
       "name": "YouTube",
-      "url": "https://youtube.com/@username-kamu",
+      "url": "https://www.youtube.com/@MASF33L",
       "icon": "youtube",
-      "handle": "@username-kamu"
+      "handle": "@MASF33L"
     },
     {
       "name": "TikTok",
       "url": "https://www.tiktok.com/@masfel.id",
       "icon": "tiktok",
       "handle": "@masfel.id"
+    },
+    {
+      "name": "Discord",
+      "url": "https://discord.com/invite/ZPTeQUUtPH",
+      "icon": "x",
+      "handle": "LIVARA"
     }
   ],
   "otherLinks": [
@@ -24,7 +30,8 @@
       "name": "PointBlank Private Livara",
       "url": "https://www.livara.my.id",
       "description": "Aku Admin Disini, Bisa tanya ke aku",
-      "icon": "globe"
+      "icon": "globe",
+      "duration_plan": "permanent"
     }
   ]
 }

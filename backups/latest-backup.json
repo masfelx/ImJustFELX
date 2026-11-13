@@ -1,0 +1,167 @@
+{
+  "backup_timestamp": "2026-11-13T07:36:21.327Z",
+  "source": "https://ebtwgnsgdtpbsmyhwhba.supabase.co",
+  "posts": [
+    {
+      "id": 1,
+      "slug": "checklist-sebelum-publish",
+      "title": "Checklist sebelum menerbitkan tulisan",
+      "excerpt": "Daftar pendek yang aku pakai setiap kali menekan tombol publish — dari judul sampai meta description.",
+      "content": "Semua orang punya ritual sendiri sebelum publish. Ini punyaku — pendek,\ntidak rewel, dan sudah terbukti menyelamatkan aku berkali-kali.\n\n## 1. Judulnya bisa berdiri sendiri\n\nJudul adalah satu-satunya hal yang pasti dibaca orang. Uji sederhana:\n\n- Apakah judulnya masih masuk akal kalau muncul sendiri di hasil pencarian?\n- Apakah ada kata yang bisa dihapus tanpa mengubah makna?\n\n## 2. Paragraf pembuka menjawab \"kenapa aku harus baca ini?\"\n\nDua sampai tiga kalimat pertama menentukan apakah orang lanjut atau\nmenutup tab. Jangan buka dengan basa-basi.\n\n## 3. Scan-ability\n\nOrang memindai sebelum membaca. Pastikan:\n\n1. Subjudul (`##`) muncul setiap 300–400 kata\n2. Daftar dipakai kalau itemnya benar-benar sejajar\n3. Kalimat panjang dipecah\n\n## 4. Link dan fakta dicek ulang\n\nTautan mati dan angka yang salah adalah cara tercepat kehilangan\nkepercayaan. `Ctrl+F` kata \"TODO\" sebelum publish — serius.\n\n## 5. Meta description ditulis manual\n\nExcerpt di frontmatter jadi deskripsi saat link dibagikan ke WhatsApp,\nX, atau muncul di Google. Tulis manual, jangan biarkan terpotong acak:\n\n```yaml\n---\ntitle: \"Judul tulisan\"\ndate: \"2026-10-28\"\nexcerpt: \"Satu-dua kalimat yang menjelaskan isi tulisan.\"\n---\n```\n\n## Terakhir\n\nTidurkan semalam, baca ulang paginya, lalu publish. Selalu.",
+      "cover": null,
+      "date": "2026-10-28",
+      "created_at": "2026-11-10T22:41:56.227985+00:00",
+      "updated_at": "2026-11-10T22:41:56.227985+00:00"
+    },
+    {
+      "id": 13,
+      "slug": "beranda",
+      "title": "Pengaturan Beranda",
+      "excerpt": "Komunitas gaming & blog. Udah itu aja.",
+      "content": "{\"hero_badge\":\"Hai, Aku Fel\",\"hero_title\":\"Cerita, catatan,\\ndan karya.\",\"hero_subtitle\":\"Komunitas gaming & blog. Udah itu aja.\",\"cta_primary_text\":\"Baca Blog\",\"cta_primary_url\":\"/blog\",\"cta_secondary_text\":\"Cerita\",\"cta_secondary_url\":\"/cerita\",\"cta_tertiary_text\":\"Donasi\",\"cta_tertiary_url\":\"/donasi\",\"posts_heading\":\"Tulisan terbaru.\",\"explore_heading\":\"Jelajahi.\",\"explore_items\":[{\"href\":\"/cerita\",\"name\":\"Cerita\",\"description\":\"Ruang berbagi unek-unek, pesan, dan kisah anonim interaktif.\",\"icon\":\"heart\"},{\"href\":\"/donasi\",\"name\":\"Donasi\",\"description\":\"Traktir kopi lewat Saweria, Sociabuzz, atau Sibagi — sekecil apa pun berarti.\",\"icon\":\"coffee\"},{\"href\":\"/terhubung\",\"name\":\"Terhubung\",\"description\":\"Semua akun sosial media dan website lainnya, di satu halaman.\",\"icon\":\"instagram\"},{\"href\":\"/tentang\",\"name\":\"Tentang\",\"description\":\"Kenalan dengan orang di balik tulisan-tulisan ini.\",\"icon\":\"user\"}]}",
+      "cover": null,
+      "date": "2026-11-12",
+      "created_at": "2026-11-11T09:18:52.353215+00:00",
+      "updated_at": "2026-11-12T19:02:08.757+00:00"
+    },
+    {
+      "id": 2,
+      "slug": "desain-bersih-selalu-menang",
+      "title": "Kenapa desain yang bersih selalu menang ?",
+      "excerpt": "Refleksi singkat tentang desain minimal: ruang kosong bukan lawan konten, tapi panggungnya.",
+      "content": "# Kenapa Desain yang Bersih Selalu Menang?\n\nAda alasan kenapa website-website paling dicintai di dunia terlihat \"sederhana\": banyak ruang kosong, satu warna aksen, dan tipografi yang rapi.\n\nBukan karena malas mendesain. Justru sebaliknya.\n\nMembuat desain yang terlihat sederhana ternyata jauh lebih sulit daripada membuat desain yang penuh dekorasi. Kita harus tahu elemen mana yang benar-benar penting, mana yang hanya membuat tampilan semakin ramai, dan mana yang sebenarnya tidak perlu ada.\n\nDi dunia desain, terkadang semakin banyak bukan berarti semakin baik.\n\n## Ruang kosong itu panggung\n\nPernah masuk ke museum seni? Biasanya lukisan dipajang dengan jarak yang cukup, dindingnya tidak terlalu ramai, dan pencahayaannya dibuat sedemikian rupa.\n\nKenapa begitu?\n\nKarena perhatian pengunjung seharusnya tertuju pada lukisannya, bukan pada dekorasi di sekelilingnya.\n\nPrinsip yang sama berlaku dalam desain website.\n\nWhite space atau ruang kosong bukanlah ruang yang terbuang. Justru, ruang kosong membantu setiap elemen mendapatkan perhatian yang semestinya.\n\nBayangkan sebuah halaman website yang dipenuhi tombol, ikon, warna, dan berbagai macam efek. Pengunjung mungkin bingung harus melihat ke mana terlebih dahulu.\n\nSekarang bandingkan dengan halaman yang hanya memiliki judul, deskripsi singkat, satu tombol utama, dan ruang yang cukup di sekelilingnya.\n\nMana yang lebih nyaman dilihat?\n\nSering kali jawabannya sudah jelas.\n\nDi blog ini, aku mencoba menerapkan prinsip yang sama:\n\n| Elemen | Keputusan |\n| --- | --- |\n| Warna aksen | Satu saja — biru |\n| Tombol | Bentuk pill, tanpa dekorasi berlebihan |\n| Pembatas section | Perubahan warna latar, bukan garis |\n| Bayangan | Hanya untuk gambar, tidak untuk kartu |\n| Layout | Memberikan ruang antar elemen |\n| Ikon | Digunakan seperlunya |\n\nTujuannya bukan membuat website terlihat kosong, tetapi memastikan setiap elemen punya alasan untuk berada di sana.\n\n## Color palette: sedikit warna, lebih banyak karakter\n\nSalah satu kesalahan yang sering terjadi ketika mendesain adalah terlalu banyak menggunakan warna.\n\nAwalnya mungkin hanya ingin membuat tampilan lebih menarik. Ditambahkan warna biru, lalu hijau, sedikit oranye, kemudian ungu untuk membedakan beberapa bagian.\n\nTanpa sadar, website justru terlihat seperti kumpulan elemen yang tidak saling berhubungan.\n\nPadahal, sebuah desain tidak membutuhkan banyak warna untuk memiliki karakter.\n\nCoba gunakan prinsip sederhana 60-30-10:\n\n- **60% warna dominan:** biasanya warna latar seperti putih atau off-white.\n- **30% warna sekunder:** digunakan untuk section, permukaan, atau elemen pendukung.\n- **10% warna aksen:** warna utama untuk tombol, tautan, dan elemen penting.\n\nContohnya:\n\n| Peran | Warna | Hex |\n| --- | --- | --- |\n| Background | Off-white | `#F8FAFC` |\n| Secondary | Abu-abu muda | `#E2E8F0` |\n| Primary Accent | Biru | `#0066CC` |\n| Text | Dark Slate | `#1E293B` |\n\nDengan kombinasi seperti ini, tampilan website terasa lebih konsisten. Warna biru juga menjadi lebih mudah dikenali karena tidak bersaing dengan banyak warna lainnya.\n\nSatu hal yang perlu diingat: warna aksen bukan sekadar hiasan. Gunakan untuk menunjukkan sesuatu yang memang penting atau bisa diklik.\n\n## Tipografi adalah antarmuka\n\nKalau tulisan adalah produk utama sebuah blog, maka tipografi adalah antarmukanya.\n\nPengunjung mungkin tidak terlalu memperhatikan jenis font yang kamu gunakan. Namun, mereka pasti merasakan ketika tulisan terlalu kecil, jarak antarbaris terlalu rapat, atau paragraf terlalu panjang.\n\nAda dua hal yang menurutku paling berpengaruh:\n\n**1. Ukuran tubuh teks**\n\nUkuran 17px terasa lebih nyaman dibaca daripada 16px untuk banyak tampilan blog, terutama ketika pengunjung membaca artikel cukup panjang melalui ponsel.\n\n**2. Ritme vertikal**\n\nJarak antarparagraf, tinggi baris, dan jarak antarjudul harus memiliki pola yang konsisten.\n\nJangan sampai judul terlalu dekat dengan paragraf sebelumnya, sementara paragraf berikutnya justru memiliki jarak yang terlalu jauh.\n\nHal-hal kecil seperti ini sering kali menjadi pembeda antara website yang sekadar terlihat bagus dan website yang benar-benar nyaman digunakan.\n\n## Konsistensi lebih penting daripada efek\n\nDesain yang bagus tidak harus memiliki animasi di setiap sudut.\n\nTidak semua tombol perlu efek mengambang. Tidak semua kartu perlu bayangan. Tidak semua elemen harus bergerak ketika disentuh.\n\nEfek visual memang bisa membuat website terasa lebih hidup, tetapi penggunaannya harus punya tujuan.\n\nMisalnya, animasi kecil ketika tombol ditekan dapat memberikan feedback bahwa interaksi berhasil. Transisi warna saat hover juga bisa membantu menunjukkan bahwa sebuah elemen dapat diklik.\n\nNamun, kalau setiap elemen memiliki animasi berbeda, pengalaman pengguna justru terasa tidak konsisten.\n\nMenurutku, lebih baik memiliki beberapa komponen sederhana yang digunakan secara konsisten daripada puluhan komponen dengan gaya masing-masing.\n\n> Desain yang baik bukan ketika tidak ada lagi yang bisa ditambahkan, tapi ketika tidak ada lagi yang bisa dikurangi.\n\n## Coba sendiri\n\nKalau kamu sedang membangun sesuatu — blog, portfolio, landing page, atau toko online — coba lihat kembali desain yang sudah kamu buat.\n\nPerhatikan beberapa hal berikut:\n\n- Berapa banyak warna yang kamu gunakan?\n- Apakah semua tombol benar-benar diperlukan?\n- Apakah setiap section memiliki jarak yang cukup?\n- Apakah ukuran teks nyaman dibaca di ponsel?\n- Apakah elemen-elemen di dalamnya memiliki gaya yang konsisten?\n\nKalau ada terlalu banyak warna, dekorasi, atau elemen yang sebenarnya tidak memiliki fungsi, mungkin sudah waktunya untuk memangkasnya.\n\nBahkan, kamu bisa mulai dari satu aturan sederhana dalam CSS:\n\n```css\n:root {\n  /* Satu aksen untuk semua aksi */\n  --color-primary: #0066cc;\n\n  /* Warna dasar */\n  --color-background: #f8fafc;\n  --color-surface: #ffffff;\n  --color-text: #1e293b;\n\n  /* Tipografi */\n  --font-size-body: 17px;\n  --line-height-body: 1.7;\n}\n```\n\nDari sini, kamu sudah punya fondasi visual yang cukup untuk membangun tampilan website yang konsisten.\n\nPada akhirnya, desain bersih bukan tentang mengikuti tren minimalis atau membuat semuanya terlihat putih.\n\nIni tentang bagaimana kita menghargai perhatian pengguna. Memberikan informasi yang mereka butuhkan tanpa membuat mereka harus bekerja lebih keras untuk menemukannya.\n\n**Konstrain bukan pembatas kreativitas. Konstrain adalah kreativitas.**",
+      "cover": null,
+      "date": "2026-11-11",
+      "created_at": "2026-11-10T22:41:56.785379+00:00",
+      "updated_at": "2026-11-11T08:54:44.306+00:00"
+    },
+    {
+      "id": 17,
+      "slug": "cerita-feed",
+      "title": "Cerita Feed Data",
+      "excerpt": "Internal storage for cerita feed",
+      "content": "[{\"id\":\"local-1794535524628-7wxti\",\"author_name\":\"Anonim\",\"author_handle\":\"@anonim\",\"content\":\"allowwww\",\"avatar_color\":\"bg-cyan-600\",\"likes\":0,\"created_at\":\"2026-11-13T02:05:24.628Z\",\"replies\":[],\"is_vip\":false},{\"id\":\"local-1794535487290-rm3ib\",\"author_name\":\"Anonim\",\"author_handle\":\"@anonim\",\"content\":\"Haii\",\"avatar_color\":\"bg-blue-600\",\"likes\":0,\"created_at\":\"2026-11-13T02:04:47.290Z\",\"replies\":[],\"is_vip\":false},{\"id\":\"local-1794452813074-o3mct\",\"author_name\":\"Kepo\",\"author_handle\":\"@kepo\",\"content\":\"Gini kan ya?\",\"avatar_color\":\"bg-rose-600\",\"likes\":1,\"created_at\":\"2026-11-12T03:06:53.074Z\",\"replies\":[],\"is_vip\":false,\"image_url\":\"https://ebtwgnsgdtpbsmyhwhba.supabase.co/storage/v1/object/public/cerita-photos/cerita-1794452812068-c0rzvy.webp\"}]",
+      "cover": null,
+      "date": "2026-11-13",
+      "created_at": "2026-11-11T10:06:15.64262+00:00",
+      "updated_at": "2026-11-13T02:05:24.628+00:00"
+    },
+    {
+      "id": 10,
+      "slug": "tentang",
+      "title": "Tentang",
+      "excerpt": "Kenalan dengan orang di balik LUX0RIA — cerita, motivasi, dan hal-hal di balik layar.",
+      "content": "\nHalo! Aku Feldiantrxahackim biasa di panggil Fel, orang di balik **LUX0RIA** — blog pribadi tempat aku menampung\ncerita, catatan, dan karya.\n\n## Situs ini apa?\n\nLUX0RIA adalah rumah kecilku di internet. Bukan feed algoritma, bukan\nplatform sewa — cuma halaman Biasa, tenang,  yang bisa dikunjungi kapan saja\ntanpa iklan, tanpa Hal yang rewel.\n\nSemua tulisan di sini kutulis sendiri: cerita, tutorial, catatan teknis,\ndan eksperimen. Kalau ada yang salah, salahnya pun milikku; kalau ada\nyang bermanfaat, silakan ambil.\n\nSetidaknya Aku Ada disini Berhasil Membuat pengunjung Mempercayaiku.\nwalau... Aku Gagal tentang Asmara.\n\n## Apa yang kutulis\n\n- **Cerita** — pengalaman dan catatan perjalanan\n- **Tutorial & catatan teknis** — hal yang kupelajari dan kubagikan\n- **Karya & proyek** — eksperimen desain, kode, dan lainnya\n\n## Mau terhubung?\n\nAku aktif di sosial media — semua link-nya kurang lebih di\nhalaman [Terhubung](/terhubung). Dan kalau tulisan-tulisanku bermanfaat,\naku nggak akan menolak secangkir kopi lewat halaman [Donasi](/donasi).\n\nTerima kasih sudah mampir. Semoga kamu menemukan sesuatu yang berguna.\n",
+      "cover": null,
+      "date": "2026-11-11",
+      "created_at": "2026-11-11T09:01:25.534067+00:00",
+      "updated_at": "2026-11-11T09:12:52.527+00:00"
+    },
+    {
+      "id": 36,
+      "slug": "vip-settings",
+      "title": "VIP Settings Data",
+      "excerpt": "Internal storage for VIP quota & settings",
+      "content": "{\"quota\":1000000,\"initial_quota\":1000000,\"price_per_vip\":5000,\"qris_image_url\":\"/qris-felxstore.png\",\"merchant\":{\"name\":\"FELXSTORE\",\"nmid\":\"ID1025408420731\",\"store_id\":\"g373569475\",\"city\":\"INDRAGIRI HULU\",\"postal_code\":\"29351, 29371\",\"printed_by\":\"93600914\",\"raw_qris\":\"00020101021126610014COM.GO-JEK.WWW01189360091433735694750210G3735694750303UMI51440014ID.CO.QRIS.WWW0215ID10254084207310303UMI5204549953033605802ID5909felxstore6014INDRAGIRI HULU61052931162070703A016304A619\"},\"total_earned\":0,\"total_transactions\":0,\"transactions\":[]}",
+      "cover": null,
+      "date": "2026-11-13",
+      "created_at": "2026-11-13T02:28:17.983773+00:00",
+      "updated_at": "2026-11-13T02:40:38.67+00:00"
+    }
+  ],
+  "links": [
+    {
+      "id": 41,
+      "name": "Instagram",
+      "url": "https://www.instagram.com/feldiantrxahackim_/",
+      "handle": "@feldiantrxahackim_",
+      "description": null,
+      "icon": "instagram",
+      "type": "social",
+      "sort_order": 1,
+      "created_at": "2026-11-12T11:31:35.99333+00:00"
+    },
+    {
+      "id": 45,
+      "name": "PointBlank Private Livara",
+      "url": "https://www.livara.my.id",
+      "handle": "meta:{\"duration_plan\":\"permanent\"}",
+      "description": "Aku Admin Disini, Bisa tanya ke aku",
+      "icon": "globe",
+      "type": "other",
+      "sort_order": 1,
+      "created_at": "2026-11-12T11:31:35.99333+00:00"
+    },
+    {
+      "id": 42,
+      "name": "YouTube",
+      "url": "https://www.youtube.com/@MASF33L",
+      "handle": "@MASF33L",
+      "description": null,
+      "icon": "youtube",
+      "type": "social",
+      "sort_order": 2,
+      "created_at": "2026-11-12T11:31:35.99333+00:00"
+    },
+    {
+      "id": 43,
+      "name": "TikTok",
+      "url": "https://www.tiktok.com/@masfel.id",
+      "handle": "@masfel.id",
+      "description": null,
+      "icon": "tiktok",
+      "type": "social",
+      "sort_order": 3,
+      "created_at": "2026-11-12T11:31:35.99333+00:00"
+    },
+    {
+      "id": 44,
+      "name": "Discord",
+      "url": "https://discord.com/invite/ZPTeQUUtPH",
+      "handle": "LIVARA",
+      "description": null,
+      "icon": "x",
+      "type": "social",
+      "sort_order": 4,
+      "created_at": "2026-11-12T11:31:35.99333+00:00"
+    }
+  ],
+  "donations": [
+    {
+      "id": 4,
+      "name": "Saweria",
+      "url": "https://saweria.co/MASF33L",
+      "description": "Traktir kopi atau dukung lewat QRIS, e-wallet, dan transfer bank.",
+      "icon": "coffee",
+      "sort_order": 1,
+      "created_at": "2026-11-10T23:20:34.386238+00:00"
+    },
+    {
+      "id": 5,
+      "name": "Sociabuzz",
+      "url": "https://sociabuzz.com/masf33l",
+      "description": "Dukungan berkelanjutan — bisa sekali bayar atau langganan bulanan.",
+      "icon": "spark",
+      "sort_order": 2,
+      "created_at": "2026-11-10T23:20:34.386238+00:00"
+    },
+    {
+      "id": 6,
+      "name": "Sibagi",
+      "url": "https://sibagi.com/masfel",
+      "description": "Bagikan dukunganmu lewat platform donasi karya dan konten lokal.",
+      "icon": "gift",
+      "sort_order": 3,
+      "created_at": "2026-11-10T23:20:34.386238+00:00"
+    }
+  ],
+  "site_config": {
+    "id": "current",
+    "name": "LUX0RIA",
+    "tagline": "Komunitas gaming & blog",
+    "description": "hmmm",
+    "url": "https://im-just-felx.vercel.app/",
+    "author": "Feldiantrxahackim",
+    "updated_at": "2026-11-11T09:47:57.942+00:00"
+  }
+}

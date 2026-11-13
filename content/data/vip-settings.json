@@ -1,6 +1,6 @@
 {
-  "quota": 495000,
-  "initial_quota": 500000,
+  "quota": 1000000,
+  "initial_quota": 1000000,
   "price_per_vip": 5000,
   "qris_image_url": "/qris-felxstore.png",
   "merchant": {

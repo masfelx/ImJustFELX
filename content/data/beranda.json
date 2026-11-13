@@ -1,0 +1,39 @@
+{
+  "hero_badge": "Hai, Aku Fel",
+  "hero_title": "Cerita, catatan,\ndan karya.",
+  "hero_subtitle": "Komunitas gaming & blog. Udah itu aja.",
+  "cta_primary_text": "Baca Blog",
+  "cta_primary_url": "/blog",
+  "cta_secondary_text": "Cerita",
+  "cta_secondary_url": "/cerita",
+  "cta_tertiary_text": "Donasi",
+  "cta_tertiary_url": "/donasi",
+  "posts_heading": "Tulisan terbaru.",
+  "explore_heading": "Jelajahi.",
+  "explore_items": [
+    {
+      "href": "/cerita",
+      "name": "Cerita",
+      "description": "Ruang berbagi unek-unek, pesan, dan kisah anonim interaktif.",
+      "icon": "heart"
+    },
+    {
+      "href": "/donasi",
+      "name": "Donasi",
+      "description": "Traktir kopi lewat Saweria, Sociabuzz, atau Sibagi — sekecil apa pun berarti.",
+      "icon": "coffee"
+    },
+    {
+      "href": "/terhubung",
+      "name": "Terhubung",
+      "description": "Semua akun sosial media dan website lainnya, di satu halaman.",
+      "icon": "instagram"
+    },
+    {
+      "href": "/tentang",
+      "name": "Tentang",
+      "description": "Kenalan dengan orang di balik tulisan-tulisan ini.",
+      "icon": "user"
+    }
+  ]
+}

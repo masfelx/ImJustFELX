@@ -3,7 +3,7 @@
  * POST /api/cerita — Buat cerita baru (publik, rate-limited)
  */
 import { NextRequest, NextResponse } from "next/server";
-import { getAllCerita, createCerita } from "@/lib/cerita";
+import { getAllCerita, createCerita, CeritaStorageError } from "@/lib/cerita";
 
 // Rate limit sederhana: 1 post per 30 detik per IP
 const rateLimitMap = new Map<string, number>();
@@ -104,6 +104,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(cerita, { status: 201 });
   } catch (err) {
     console.error("[POST /api/cerita]:", err);
+    if (err instanceof CeritaStorageError) {
+      return NextResponse.json({ error: err.message }, { status: 503 });
+    }
     return NextResponse.json(
       { error: "Gagal menyimpan cerita." },
       { status: 500 }

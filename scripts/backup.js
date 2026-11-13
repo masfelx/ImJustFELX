@@ -71,6 +71,79 @@ async function runBackup() {
     console.warn("⚠️ Gagal mengambil tabel site_config:", configError.message);
   }
 
+  // 5. Ambil data stories + story_replies (kalau tabelnya sudah ada)
+  const { data: stories, error: storiesError } = await client
+    .from("stories")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(2000);
+
+  let storyReplies = [];
+  if (storiesError) {
+    console.warn(
+      "⚠️ Tabel stories belum tersedia — backup cerita memakai posts.cerita-feed.",
+      storiesError.message
+    );
+  } else {
+    console.log(`✅ Berhasil mengambil ${stories.length} baris dari tabel stories.`);
+    const repliesRes = await client
+      .from("story_replies")
+      .select("*")
+      .order("created_at", { ascending: true });
+    if (repliesRes.error) {
+      console.warn("⚠️ Gagal mengambil tabel story_replies:", repliesRes.error.message);
+    } else {
+      storyReplies = repliesRes.data ?? [];
+      console.log(`✅ Berhasil mengambil ${storyReplies.length} baris dari tabel story_replies.`);
+    }
+  }
+
+  // Tulis cerita.json dari tabel stories (sumber utama) bila tersedia
+  if (Array.isArray(stories) && stories.length > 0) {
+    const byStory = new Map();
+    for (const reply of storyReplies) {
+      const key = String(reply.story_id);
+      const list = byStory.get(key) ?? [];
+      list.push({
+        id: String(reply.id),
+        story_id: String(reply.story_id),
+        author_name: reply.author_name || "Anonim",
+        author_handle: reply.author_handle || "@anon",
+        content: reply.content,
+        avatar_color: reply.avatar_color || "bg-blue-600",
+        created_at: reply.created_at,
+      });
+      byStory.set(key, list);
+    }
+
+    const ceritaList = stories.map((row) => ({
+      id: String(row.id),
+      author_name: row.author_name || "Anonim",
+      author_handle: row.author_handle || "@anon",
+      content: row.content,
+      avatar_color: row.avatar_color || "bg-blue-600",
+      likes: row.likes || 0,
+      created_at: row.created_at,
+      replies: byStory.get(String(row.id)) ?? [],
+      is_vip: Boolean(row.is_vip),
+      vip_theme: row.vip_theme || undefined,
+      pinned_until: row.pinned_until || undefined,
+      image_url: row.image_url || undefined,
+      proof_image_url: row.proof_image_url || undefined,
+      is_edited: Boolean(row.is_edited),
+      edited_at: row.edited_at || undefined,
+    }));
+
+    fs.writeFileSync(
+      path.join(dataDir, "cerita.json"),
+      JSON.stringify(ceritaList, null, 2),
+      "utf8"
+    );
+    console.log(
+      `💾 Backup Cerita Feed: ${ceritaList.length} cerita dari tabel stories tersimpan ke content/data/cerita.json`
+    );
+  }
+
   // ==========================================
   // A. SIMPAN DATA KHUSUS KE content/data/
   // ==========================================
@@ -81,6 +154,13 @@ async function runBackup() {
   for (const post of posts) {
     // 1. Cerita Feed
     if (post.slug === "cerita-feed") {
+      // Kalau tabel stories sudah terisi, itu sumber utama — jangan ditimpa.
+      if (Array.isArray(stories) && stories.length > 0) {
+        console.log(
+          "↩️ Lewati posts.cerita-feed (cerita sudah dibackup dari tabel stories)."
+        );
+        continue;
+      }
       try {
         const parsed = JSON.parse(post.content);
         fs.writeFileSync(
@@ -259,6 +339,8 @@ ${(post.content || "").trim()}
     links,
     donations,
     site_config: siteConfig,
+    stories: Array.isArray(stories) ? stories : [],
+    story_replies: Array.isArray(storyReplies) ? storyReplies : [],
   };
 
   const backupFileName = `backup-${dateStr}.json`;

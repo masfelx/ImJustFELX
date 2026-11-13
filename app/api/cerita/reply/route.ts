@@ -2,7 +2,7 @@
  * POST /api/cerita/reply — Kirim balasan ke sebuah cerita (publik)
  */
 import { NextRequest, NextResponse } from "next/server";
-import { createReply } from "@/lib/cerita";
+import { createReply, CeritaStorageError } from "@/lib/cerita";
 
 const replyRateLimit = new Map<string, number>();
 
@@ -69,6 +69,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(reply, { status: 201 });
   } catch (err) {
     console.error("[POST /api/cerita/reply]:", err);
+    if (err instanceof CeritaStorageError) {
+      return NextResponse.json({ error: err.message }, { status: 503 });
+    }
     return NextResponse.json(
       { error: "Gagal mengirim balasan." },
       { status: 500 }

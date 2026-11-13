@@ -44,18 +44,35 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     await saveBlogPost(updated);
     return NextResponse.json({ success: true, data: updated });
-  } catch {
-    return NextResponse.json({ error: "Request tidak valid." }, { status: 400 });
+  } catch (err) {
+    console.error("[PUT /api/admin/blog/[slug]]:", err);
+    const message =
+      err instanceof Error && err.name !== "SyntaxError"
+        ? err.message
+        : "Request tidak valid.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   const { slug } = await context.params;
 
-  const deleted = await deleteBlogPost(slug);
-  if (!deleted) {
-    return NextResponse.json({ error: "Post tidak ditemukan." }, { status: 404 });
+  try {
+    const deleted = await deleteBlogPost(slug);
+    if (!deleted) {
+      return NextResponse.json({ error: "Post tidak ditemukan." }, { status: 404 });
+    }
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("[DELETE /api/admin/blog/[slug]]:", err);
+    return NextResponse.json(
+      {
+        error:
+          err instanceof Error
+            ? err.message
+            : "Gagal menghapus post dari database.",
+      },
+      { status: 500 },
+    );
   }
-
-  return NextResponse.json({ success: true });
 }

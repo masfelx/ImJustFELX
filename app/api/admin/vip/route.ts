@@ -160,7 +160,15 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     console.error("[POST /api/admin/vip]:", err);
-    return NextResponse.json({ error: "Gagal memperbarui pengaturan VIP" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error:
+          err instanceof Error
+            ? err.message
+            : "Gagal memperbarui pengaturan VIP",
+      },
+      { status: 500 },
+    );
   }
 }
 

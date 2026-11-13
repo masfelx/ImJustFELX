@@ -48,7 +48,12 @@ export async function POST(request: NextRequest) {
 
     await saveBlogPost(post);
     return NextResponse.json({ success: true, data: post }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Request tidak valid." }, { status: 400 });
+  } catch (err) {
+    console.error("[POST /api/admin/blog]:", err);
+    const message =
+      err instanceof Error && err.name !== "SyntaxError"
+        ? err.message
+        : "Request tidak valid.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

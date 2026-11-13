@@ -10,12 +10,9 @@
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { createAdminToken, verifyAdminToken } from "./token";
+import { getJwtSecret } from "./jwt-secret";
 
 const COOKIE_NAME = "lux0ria_admin_token";
-
-export function getJwtSecret(): string {
-  return process.env.JWT_SECRET || "default_lux0ria_jwt_secret_fallback_key_2026";
-}
 
 function getAdminPasswordHash(): string {
   return process.env.ADMIN_PASSWORD_HASH || "";
@@ -31,7 +28,9 @@ export function checkRateLimit(ip: string): {
   remaining: number;
   resetAt: number;
 } {
-  if (process.env.NODE_ENV !== "production" || ip === "::1" || ip === "127.0.0.1" || ip === "unknown") {
+  // Bypass hanya untuk development lokal — jangan pernah bypass di production,
+  // termasuk saat IP tidak terdeteksi (itu justru celah untuk brute force).
+  if (process.env.NODE_ENV !== "production") {
     return { allowed: true, remaining: 99, resetAt: Date.now() + WINDOW_MS };
   }
 
@@ -77,11 +76,17 @@ export async function verifyPassword(password: string): Promise<boolean> {
 
 /* ── JWT (Web Crypto) ───────────────────────────────────── */
 export async function createToken(): Promise<string> {
-  return createAdminToken(getJwtSecret());
+  const secret = getJwtSecret();
+  if (!secret) {
+    throw new Error("Admin belum dikonfigurasi: JWT_SECRET kosong.");
+  }
+  return createAdminToken(secret);
 }
 
 export async function verifyToken(token: string): Promise<boolean> {
-  return verifyAdminToken(token, getJwtSecret());
+  const secret = getJwtSecret();
+  if (!secret) return false;
+  return verifyAdminToken(token, secret);
 }
 
 /* ── Cookie helpers ─────────────────────────────────────── */

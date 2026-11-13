@@ -4,6 +4,15 @@ import fs from "node:fs";
 import path from "node:path";
 
 const uploadsDir = path.join(process.cwd(), "public", "uploads");
+const isVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
+
+const EXT_BY_MIME: Record<string, string> = {
+  "image/jpeg": ".jpg",
+  "image/jpg": ".jpg",
+  "image/png": ".png",
+  "image/webp": ".webp",
+  "image/gif": ".gif",
+};
 
 /**
  * POST /api/cerita/upload — Upload foto untuk cerita
@@ -46,10 +55,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const originalName = file.name || "photo.jpg";
-    const ext = path.extname(originalName).toLowerCase() || ".jpg";
     const randomSuffix = Math.random().toString(36).slice(2, 8);
-    const fileName = `cerita-${Date.now()}-${randomSuffix}${ext}`;
+    const fileName = `cerita-${Date.now()}-${randomSuffix}${
+      EXT_BY_MIME[file.type.toLowerCase()] ?? ".jpg"
+    }`;
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
@@ -83,7 +92,18 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 2. Fallback: Simpan ke folder lokal public/uploads
+    // 2. Fallback lokal — hanya bisa di mesin lokal, bukan Vercel.
+    if (isVercel) {
+      return NextResponse.json(
+        {
+          error:
+            "Penyimpanan foto belum siap. Pastikan bucket Supabase Storage " +
+            "'cerita-photos' sudah dibuat (Public) dan SUPABASE_SERVICE_ROLE_KEY valid.",
+        },
+        { status: 503 }
+      );
+    }
+
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }

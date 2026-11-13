@@ -44,7 +44,12 @@ export async function POST(request: NextRequest) {
 
     await saveDonasi(items);
     return NextResponse.json({ success: true, data: items });
-  } catch {
-    return NextResponse.json({ error: "Request tidak valid." }, { status: 400 });
+  } catch (err) {
+    console.error("[POST /api/admin/donasi]:", err);
+    const message =
+      err instanceof Error && err.name !== "SyntaxError"
+        ? err.message
+        : "Request tidak valid.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

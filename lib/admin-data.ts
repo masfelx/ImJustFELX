@@ -74,6 +74,18 @@ function writeJSON<T>(filename: string, data: T): void {
   }
 }
 
+/**
+ * Di Vercel tidak ada filesystem yang bisa ditulis. Kalau service role key
+ * tidak ada, JANGAN lanjut seolah-olah berhasil — lempar error yang jelas.
+ */
+function assertCloudWritable(): void {
+  if (isVercel && !supabaseAdmin) {
+    throw new Error(
+      "Penyimpanan belum siap: SUPABASE_SERVICE_ROLE_KEY wajib diset di Vercel.",
+    );
+  }
+}
+
 /* ── Donasi CRUD ────────────────────────────────────────── */
 export type DonasiItem = {
   name: string;
@@ -115,11 +127,17 @@ export async function getDonasiAsync(): Promise<DonasiItem[]> {
 }
 
 export async function saveDonasi(items: DonasiItem[]): Promise<void> {
+  assertCloudWritable();
   clearDataCache("donasi");
   // 1. Simpan ke Supabase Cloud (utama di Vercel)
   if (supabaseAdmin) {
     try {
-      await supabaseAdmin.from("donations").delete().neq("id", 0);
+      const { error: deleteError } = await supabaseAdmin
+        .from("donations")
+        .delete()
+        .neq("id", 0);
+      if (deleteError) throw deleteError;
+
       if (items.length > 0) {
         const rows = items.map((item, index) => ({
           name: item.name,
@@ -233,11 +251,16 @@ export async function getTerhubungAsync(): Promise<TerhubungData> {
 }
 
 export async function saveTerhubung(data: TerhubungData): Promise<void> {
+  assertCloudWritable();
   clearDataCache("terhubung");
   // 1. Simpan ke Supabase Cloud (utama di Vercel)
   if (supabaseAdmin) {
     try {
-      await supabaseAdmin.from("links").delete().neq("id", 0);
+      const { error: deleteError } = await supabaseAdmin
+        .from("links")
+        .delete()
+        .neq("id", 0);
+      if (deleteError) throw deleteError;
       const rows: Record<string, any>[] = [];
 
       data.socials.forEach((item, index) => {
@@ -328,6 +351,7 @@ export async function getSiteConfigAsync(): Promise<SiteConfigData> {
 }
 
 export async function saveSiteConfig(data: SiteConfigData): Promise<void> {
+  assertCloudWritable();
   clearDataCache("site_config");
   // 1. Simpan ke Supabase Cloud (utama di Vercel)
   if (supabaseAdmin) {
@@ -473,6 +497,7 @@ export async function getBlogPostAsync(slug: string): Promise<BlogPostData | nul
 }
 
 export async function saveBlogPost(post: BlogPostData): Promise<void> {
+  assertCloudWritable();
   clearDataCache("posts");
   // 1. Simpan ke Supabase Cloud (utama di Vercel)
   if (supabaseAdmin) {
@@ -513,15 +538,21 @@ export async function saveBlogPost(post: BlogPostData): Promise<void> {
 }
 
 export async function deleteBlogPost(slug: string): Promise<boolean> {
+  assertCloudWritable();
   clearDataCache("posts");
   if (!/^[a-z0-9-]+$/.test(slug)) return false;
 
   // 1. Hapus dari Supabase Cloud
   if (supabaseAdmin) {
     try {
-      await supabaseAdmin.from("posts").delete().eq("slug", slug);
+      const { error } = await supabaseAdmin.from("posts").delete().eq("slug", slug);
+      if (error) {
+        console.error("[Supabase Sync Error - Delete Post]:", error.message);
+        if (isVercel) throw new Error("Gagal menghapus post dari database.");
+      }
     } catch (err) {
       console.error("[Supabase Sync Error - Delete Post]:", err);
+      if (isVercel) throw err;
     }
   }
 
@@ -649,6 +680,7 @@ export async function getBerandaAsync(): Promise<BerandaData> {
 }
 
 export async function saveBeranda(data: BerandaData): Promise<void> {
+  assertCloudWritable();
   clearDataCache("beranda");
   const merged: BerandaData = {
     ...DEFAULT_BERANDA,
@@ -738,6 +770,7 @@ export async function getTentangAsync(): Promise<TentangData> {
 }
 
 export async function saveTentang(data: TentangData): Promise<void> {
+  assertCloudWritable();
   clearDataCache("tentang");
   // 1. Simpan ke Supabase Cloud (utama di Vercel)
   if (supabaseAdmin) {
@@ -794,10 +827,12 @@ export function getDashboardStats() {
 }
 
 export async function getDashboardStatsAsync() {
-  const donasi = getDonasi();
-  const terhubung = await getTerhubungAsync();
-  const posts = await getAllBlogPostsAsync();
-  const config = getSiteConfig();
+  const [donasi, terhubung, posts, config] = await Promise.all([
+    getDonasiAsync(),
+    getTerhubungAsync(),
+    getAllBlogPostsAsync(),
+    getSiteConfigAsync(),
+  ]);
 
   return {
     totalPosts: posts.length,

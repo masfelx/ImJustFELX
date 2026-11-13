@@ -141,10 +141,17 @@ export async function getVipSettingsAsync(): Promise<VipSettings> {
 
 /**
  * Simpan data kuota & pengaturan VIP secara ASYNC ke Supabase Cloud.
+ *
+ * Di production, kegagalan tulis TIDAK boleh ditelan diam-diam: kalau
+ * tersimpan gagal, cache juga tidak diperbarui supaya dashboard tidak
+ * menampilkan angka palsu.
  */
 export async function saveVipSettingsAsync(settings: VipSettings): Promise<void> {
-  const now = typeof performance !== "undefined" ? performance.now() : 0;
-  memoryVipCache = { data: settings, timestamp: now };
+  if (isVercel && !supabaseAdmin) {
+    throw new Error(
+      "Penyimpanan belum siap: SUPABASE_SERVICE_ROLE_KEY wajib diset di Vercel.",
+    );
+  }
 
   // 1. Simpan ke Supabase Cloud (utama di Vercel)
   if (supabaseAdmin) {
@@ -160,13 +167,21 @@ export async function saveVipSettingsAsync(settings: VipSettings): Promise<void>
         },
         { onConflict: "slug" }
       );
-      if (error) {
-        console.error("[saveVipSettingsAsync] Supabase upsert error:", error);
-      }
+      if (error) throw error;
     } catch (err) {
       console.error("[saveVipSettingsAsync] Supabase error:", err);
+      if (isVercel) {
+        throw new Error(
+          "Gagal menyimpan pengaturan VIP ke database. Periksa SUPABASE_SERVICE_ROLE_KEY.",
+        );
+      }
+      // Di lokal, lanjutkan simpan ke file supaya tetap bisa dipakai.
     }
   }
+
+  // Cache baru diperbarui setelah penyimpanan cloud berhasil (atau di lokal).
+  const now = typeof performance !== "undefined" ? performance.now() : 0;
+  memoryVipCache = { data: settings, timestamp: now };
 
   // 2. Simpan ke local file jika bukan di Vercel
   if (!isVercel) {

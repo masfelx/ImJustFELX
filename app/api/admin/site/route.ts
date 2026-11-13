@@ -38,7 +38,12 @@ export async function POST(request: NextRequest) {
 
     await saveSiteConfig(data);
     return NextResponse.json({ success: true, data });
-  } catch {
-    return NextResponse.json({ error: "Request tidak valid." }, { status: 400 });
+  } catch (err) {
+    console.error("[POST /api/admin/site]:", err);
+    const message =
+      err instanceof Error && err.name !== "SyntaxError"
+        ? err.message
+        : "Request tidak valid.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

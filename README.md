@@ -80,6 +80,116 @@ Dirancang dengan estetika bersih ala Apple Design System, didukung arsitektur **
 
 ---
 
+## Admin Panel
+
+Admin panel ada di **`/admin`** (tidak ditautkan dari navigasi publik).
+
+### Cara masuk
+1. Buka `https://domain-kamu.com/admin`.
+2. Masukkan password admin (yang hash-nya tersimpan di `ADMIN_PASSWORD_HASH`).
+3. Setelah berhasil, kamu diarahkan ke `/admin/dashboard`.
+
+### Menu yang tersedia
+| Menu | Fungsi |
+|---|---|
+| **Dashboard** | Ringkasan statistik: jumlah blog, donasi, tautan, dan aktivitas terbaru. |
+| **Beranda** | Ubah judul, subjudul, dan konten halaman depan. |
+| **Donasi** | Tambah / ubah / hapus platform donasi (Saweria, Sociabuzz, QRIS, dll). |
+| **Terhubung** | Kelola media sosial & tautan promosi, termasuk masa aktif sewa link. |
+| **Blog** | Tulis, edit, dan hapus artikel (Markdown + cover). |
+| **Tentang** | Ubah isi halaman Tentang. |
+| **Cerita** | Moderasi feed anonim — hapus cerita/balasan yang tidak layak. |
+| **Pengaturan Situs** | Nama situs, tagline, deskripsi, URL, author. |
+| **VIP** | Kuota VIP, QRIS admin, dan riwayat transaksi. |
+
+Semua perubahan langsung tersimpan ke Supabase Cloud dan tampil di website publik.
+
+### Keamanan
+- Password admin disimpan sebagai **hash bcrypt** — bukan teks biasa.
+- Sesi login memakai **JWT HMAC** di cookie `HttpOnly`, `SameSite=Lax`, `Secure` di production, berlaku 24 jam.
+- Middleware menolak akses ke `/admin/dashboard/*` dan `/api/admin/*` tanpa token valid.
+- Login dibatasi **15 percobaan / 15 menit per IP**.
+- `JWT_SECRET` **wajib** diisi di production. Tanpa itu, admin menolak semua akses (503) — tidak ada fallback diam-diam.
+- `SUPABASE_SERVICE_ROLE_KEY` hanya dipakai di server. Jangan pernah memberi prefix `NEXT_PUBLIC_` atau membagikannya ke browser.
+- Endpoint publik (kirim cerita/balasan) memakai rate limit untuk mencegah spam.
+
+### Mengganti password admin
+```bash
+node -e "console.log(require('bcryptjs').hashSync('PASSWORD_BARU', 12))"
+```
+Salin hasilnya ke `ADMIN_PASSWORD_HASH` di `.env.local` **dan** di Environment Variables Vercel, lalu redeploy.
+
+---
+
+## Setup Lokal
+
+```bash
+npm install
+cp .env.example .env.local   # Windows: copy .env.example .env.local
+npm run dev
+```
+
+Isi `.env.local`:
+
+| Variable | Wajib | Keterangan |
+|---|---|---|
+| `ADMIN_PASSWORD_HASH` | Ya | Hash bcrypt password admin. |
+| `JWT_SECRET` | Ya (production) | Random 32+ karakter untuk tanda tangan sesi. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Ya | URL project Supabase. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Ya | Publishable/anon key (boleh publik, hanya baca). |
+| `SUPABASE_SERVICE_ROLE_KEY` | Ya | Secret key — **hanya server**, dipakai untuk menulis data. |
+
+### Menyiapkan database
+1. Buka **Supabase Dashboard → SQL Editor → New Query**.
+2. Jalankan `supabase-schema.sql` (tabel dasar: posts, donations, links, site_config).
+3. Jalankan `supabase-stories.sql` (tabel `stories`, `story_replies`, realtime, dan bucket `cerita-photos`).
+4. Verifikasi koneksi:
+```bash
+npm run check:db
+```
+5. Kalau ada cerita lama yang masih tersimpan lokal:
+```bash
+npm run migrate:cerita
+```
+
+### Script berguna
+| Perintah | Fungsi |
+|---|---|
+| `npm run check:db` | Cek service key, tabel, dan bucket storage. |
+| `npm run migrate:cerita` | Pindahkan `content/data/cerita.json` ke Supabase (anti-duplikat). |
+| `npm run backup` | Snapshot database (termasuk cerita) ke `backups/` & `content/`. |
+
+---
+
+## Troubleshooting: Cerita Hilang Setelah Refresh
+
+Gejala: cerita muncul sebentar, lalu hilang setelah halaman di-refresh.
+
+Penyebabnya **bukan** bug tampilan, tapi data gagal ditulis ke database. Urutan pengecekan:
+
+1. **Service role key tidak valid**
+   - Jalankan `npm run check:db`.
+   - Kalau muncul `Service key ditolak: Unregistered API key`, buat key baru di
+     **Project Settings → API Keys → Secret keys → Create new secret key**.
+   - Ganti `SUPABASE_SERVICE_ROLE_KEY` di `.env.local` dan di Vercel, lalu redeploy.
+
+2. **Tabel `stories` belum ada**
+   - Jalankan `supabase-stories.sql` di SQL Editor.
+   - Tanpa tabel ini, aplikasi memakai `posts.cerita-feed`; kalau service key juga salah, tidak ada yang bisa ditulis.
+
+3. **Environment Variables Vercel belum diisi**
+   - Pastikan kelima variabel di atas ada di **Vercel → Settings → Environment Variables** untuk environment Production.
+   - Setelah mengubah env, **redeploy** (env lama tidak otomatis terpakai).
+
+4. **Cek respons API**
+   - Buka DevTools → Network → kirim cerita → lihat `POST /api/cerita`.
+   - Status `503` = penyimpanan belum siap (pesan errornya menjelaskan variabel mana yang salah).
+   - Status `201` = cerita benar-benar tersimpan.
+
+Sejak pembaruan ini, aplikasi **tidak akan lagi menampilkan “berhasil”** kalau data gagal disimpan — pengguna akan melihat pesan error yang jelas.
+
+---
+
 ## Penulis & Pengembang
 
 Dikembangkan dan dirawat oleh:

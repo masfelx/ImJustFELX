@@ -10,8 +10,17 @@ import {
   recordFailedAttempt,
   resetRateLimit,
 } from "@/lib/auth";
+import { getJwtSecret } from "@/lib/jwt-secret";
 
 export async function POST(request: NextRequest) {
+  // Jangan lanjut kalau secret tidak dikonfigurasi (production).
+  if (!getJwtSecret()) {
+    return NextResponse.json(
+      { error: "Admin belum dikonfigurasi di server. Hubungi administrator." },
+      { status: 503 },
+    );
+  }
+
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     request.headers.get("x-real-ip") ??

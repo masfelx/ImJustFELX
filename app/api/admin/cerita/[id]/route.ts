@@ -28,7 +28,12 @@ export async function DELETE(
   } catch (err) {
     console.error("[DELETE /api/admin/cerita]:", err);
     return NextResponse.json(
-      { error: "Gagal menghapus cerita." },
+      {
+        error:
+          err instanceof Error
+            ? err.message
+            : "Gagal menghapus cerita.",
+      },
       { status: 500 }
     );
   }

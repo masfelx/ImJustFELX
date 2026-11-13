@@ -1,6 +1,6 @@
 /**
  * ============================================================
- *  MIDDLEWARE — Proteksi route admin (Edge Runtime Compatible)
+ *  PROXY — Proteksi route admin (pengganti "middleware" di Next 16)
  * ============================================================
  *  - /admin/dashboard/* → cek JWT cookie, redirect ke /admin jika tidak valid
  *  - /api/admin/* (kecuali /api/admin/login) → return 401 jika tidak valid
@@ -8,17 +8,24 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminToken } from "@/lib/token";
+import { getJwtSecret } from "@/lib/jwt-secret";
 
 const COOKIE_NAME = "lux0ria_admin_token";
 
-function getJwtSecret(): string {
-  return process.env.JWT_SECRET || "default_lux0ria_jwt_secret_fallback_key_2026";
-}
-
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const secret = getJwtSecret();
+
+  // Fail-closed: tanpa JWT_SECRET di production, admin tidak boleh diakses.
+  if (!secret) {
+    return new NextResponse(
+      "Admin belum dikonfigurasi. Set JWT_SECRET di environment production.",
+      { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } },
+    );
+  }
+
   const token = request.cookies.get(COOKIE_NAME)?.value;
-  const isValid = token ? await verifyAdminToken(token, getJwtSecret()) : false;
+  const isValid = token ? await verifyAdminToken(token, secret) : false;
 
   // Halaman admin dashboard — redirect ke login jika tidak terautentikasi
   if (pathname.startsWith("/admin/dashboard")) {

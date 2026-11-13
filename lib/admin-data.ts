@@ -11,7 +11,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import { supabaseAdmin } from "./supabase";
+import { supabaseAdmin, supabasePublic } from "./supabase";
 
 const dataDir = path.join(process.cwd(), "content", "data");
 const postsDir = path.join(process.cwd(), "content", "posts");
@@ -89,9 +89,10 @@ export function getDonasi(): DonasiItem[] {
 /** Ambil semua metode donasi — Supabase Cloud utama, fallback local donasi.json */
 export async function getDonasiAsync(): Promise<DonasiItem[]> {
   return withCache("donasi", async () => {
-    if (supabaseAdmin) {
+    const client = supabaseAdmin || supabasePublic;
+    if (client) {
       try {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await client
           .from("donations")
           .select("*")
           .order("sort_order", { ascending: true });
@@ -176,9 +177,10 @@ export function getTerhubung(): TerhubungData {
 export async function getTerhubungAsync(): Promise<TerhubungData> {
   return withCache("terhubung", async () => {
     // Coba baca dari Supabase dulu (utama di Vercel)
-    if (supabaseAdmin) {
+    const client = supabaseAdmin || supabasePublic;
+    if (client) {
       try {
-        const { data: rows, error } = await supabaseAdmin
+        const { data: rows, error } = await client
           .from("links")
           .select("*")
           .order("sort_order", { ascending: true });
@@ -298,9 +300,10 @@ export function getSiteConfig(): SiteConfigData {
 /** Ambil konfigurasi situs — Supabase Cloud utama, fallback local site-config.json */
 export async function getSiteConfigAsync(): Promise<SiteConfigData> {
   return withCache("site_config", async () => {
-    if (supabaseAdmin) {
+    const client = supabaseAdmin || supabasePublic;
+    if (client) {
       try {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await client
           .from("site_config")
           .select("*")
           .eq("id", "current")
@@ -384,9 +387,10 @@ export function getAllBlogPosts(): BlogPostData[] {
 /** Ambil semua blog post — Supabase Cloud dulu, fallback local file */
 export async function getAllBlogPostsAsync(): Promise<BlogPostData[]> {
   return withCache("posts:all", async () => {
-    if (supabaseAdmin) {
+    const client = supabaseAdmin || supabasePublic;
+    if (client) {
       try {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await client
           .from("posts")
           .select("*")
           .neq("slug", "tentang")
@@ -439,9 +443,10 @@ export async function getBlogPostAsync(slug: string): Promise<BlogPostData | nul
   if (RESERVED_SLUGS.includes(slug)) return null;
 
   return withCache(`posts:item:${slug}`, async () => {
-    if (supabaseAdmin) {
+    const client = supabaseAdmin || supabasePublic;
+    if (client) {
       try {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await client
           .from("posts")
           .select("*")
           .eq("slug", slug)
@@ -597,9 +602,10 @@ export const DEFAULT_BERANDA: BerandaData = {
 export async function getBerandaAsync(): Promise<BerandaData> {
   return withCache("beranda", async () => {
     // 1. Coba baca dari Supabase Cloud (posts table, slug = 'beranda')
-    if (supabaseAdmin) {
+    const client = supabaseAdmin || supabasePublic;
+    if (client) {
       try {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await client
           .from("posts")
           .select("content")
           .eq("slug", "beranda")
@@ -685,9 +691,10 @@ export type TentangData = {
 export async function getTentangAsync(): Promise<TentangData> {
   return withCache("tentang", async () => {
     // 1. Coba baca dari Supabase Cloud
-    if (supabaseAdmin) {
+    const client = supabaseAdmin || supabasePublic;
+    if (client) {
       try {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await client
           .from("posts")
           .select("title, excerpt, content")
           .eq("slug", "tentang")

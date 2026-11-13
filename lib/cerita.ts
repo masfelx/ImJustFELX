@@ -14,6 +14,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabaseAdmin, supabasePublic } from "./supabase";
 import { deductVipQuotaAsync } from "./vip";
 
@@ -53,6 +54,33 @@ export type CeritaItem = {
   proof_image_url?: string;
   is_edited?: boolean;
   edited_at?: string;
+};
+
+type StoryRow = {
+  id: string | number;
+  author_name?: string | null;
+  author_handle?: string | null;
+  content: string;
+  avatar_color?: string | null;
+  likes?: number | null;
+  created_at: string;
+  is_vip?: boolean | null;
+  vip_theme?: string | null;
+  pinned_until?: string | null;
+  image_url?: string | null;
+  proof_image_url?: string | null;
+  is_edited?: boolean | null;
+  edited_at?: string | null;
+};
+
+type ReplyRow = {
+  id: string | number;
+  story_id: string | number;
+  author_name?: string | null;
+  author_handle?: string | null;
+  content: string;
+  avatar_color?: string | null;
+  created_at: string;
 };
 
 /* ── Avatar Colors ─────────────────────────────────────────── */
@@ -105,6 +133,38 @@ export class CeritaStorageError extends Error {
 
 /* ── Supabase Storage Detection ────────────────────────────── */
 /**
+ * Jalankan query baca dengan fallback: coba admin client dulu, lalu anon.
+ * Ini penting karena service key bisa saja tidak valid/revoked — data yang
+ * boleh dibaca publik tetap harus tampil walau client admin bermasalah.
+ */
+async function readWithFallback<T>(
+  run: (client: SupabaseClient) => PromiseLike<{
+    data: T | null;
+    error: { message: string } | null;
+  }>,
+): Promise<{ data: T | null; error: { message: string } | null }> {
+  const clients: SupabaseClient[] = [];
+  if (supabaseAdmin) clients.push(supabaseAdmin);
+  if (supabasePublic) clients.push(supabasePublic);
+
+  let lastError: { message: string } | null = null;
+
+  for (const client of clients) {
+    try {
+      const res = await run(client);
+      if (!res.error) return res;
+      lastError = res.error;
+    } catch (err) {
+      lastError = {
+        message: err instanceof Error ? err.message : String(err),
+      };
+    }
+  }
+
+  return { data: null, error: lastError };
+}
+
+/**
  * Cek apakah tabel `stories` ada di Supabase.
  * Hasilnya di-cache sebentar (30 detik) agar:
  *  - tidak query berulang di setiap request
@@ -122,18 +182,16 @@ async function storiesTableExists(): Promise<boolean> {
     return _storiesTableExists.value;
   }
 
-  const client = supabaseAdmin || supabasePublic;
-  if (!client) {
+  if (!supabaseAdmin && !supabasePublic) {
     _storiesTableExists = { value: false, checkedAt: now };
     return false;
   }
 
-  try {
-    const { error } = await client.from("stories").select("id").limit(1);
-    _storiesTableExists = { value: !error, checkedAt: now };
-  } catch {
-    _storiesTableExists = { value: false, checkedAt: now };
-  }
+  const { error } = await readWithFallback((client) =>
+    client.from("stories").select("id").limit(1),
+  );
+
+  _storiesTableExists = { value: !error, checkedAt: now };
   return _storiesTableExists.value;
 }
 
@@ -147,39 +205,34 @@ async function readCeritaFromPosts(): Promise<CeritaItem[] | null> {
     return ceritaPostsCache.items;
   }
 
-  const client = supabaseAdmin || supabasePublic;
-  if (!client) return null;
-  try {
-    const { data, error } = await client
+  const { data, error } = await readWithFallback<{ content: string | null }>((client) =>
+    client
       .from("posts")
       .select("content")
       .eq("slug", CERITA_FEED_SLUG)
-      .maybeSingle();
+      .maybeSingle(),
+  );
 
-    if (error) {
-      console.error("[readCeritaFromPosts] Supabase error:", error.message);
-      return null;
-    }
-
-    if (!data || !data.content) {
-      ceritaPostsCache = { items: [], timestamp: now };
-      return [];
-    }
-
-    try {
-      const parsed = JSON.parse(data.content);
-      if (Array.isArray(parsed)) {
-        ceritaPostsCache = { items: parsed, timestamp: now };
-        return parsed;
-      }
-    } catch (err) {
-      console.error("[readCeritaFromPosts] JSON parse error:", err);
-    }
-    return [];
-  } catch (err) {
-    console.warn("[readCeritaFromPosts] error:", err);
+  if (error) {
+    console.error("[readCeritaFromPosts] Supabase error:", error.message);
     return null;
   }
+
+  if (!data || !data.content) {
+    ceritaPostsCache = { items: [], timestamp: now };
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(data.content);
+    if (Array.isArray(parsed)) {
+      ceritaPostsCache = { items: parsed, timestamp: now };
+      return parsed;
+    }
+  } catch (err) {
+    console.error("[readCeritaFromPosts] JSON parse error:", err);
+  }
+  return [];
 }
 
 /** true = tersimpan, false = gagal / client admin belum siap */
@@ -220,17 +273,18 @@ function sortCerita(items: CeritaItem[]): CeritaItem[] {
 }
 
 export async function getAllCerita(): Promise<CeritaItem[]> {
-  const client = supabaseAdmin || supabasePublic;
   let remote: CeritaItem[] | null = null;
 
   // Strategy 1: Tabel `stories` (jika sudah dibuat)
-  if (client && (await storiesTableExists())) {
+  if ((supabaseAdmin || supabasePublic) && (await storiesTableExists())) {
     try {
-      const { data, error } = await client
-        .from("stories")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(200);
+      const { data, error } = await readWithFallback<StoryRow[]>((client) =>
+        client
+          .from("stories")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(200),
+      );
 
       if (!error && data) {
         remote = [];
@@ -238,10 +292,13 @@ export async function getAllCerita(): Promise<CeritaItem[]> {
           // Ambil balasan dari tabel story_replies (kalau tabelnya sudah ada)
           const repliesByStory = new Map<string, CeritaReply[]>();
           try {
-            const { data: replyRows, error: replyError } = await client
-              .from("story_replies")
-              .select("*")
-              .order("created_at", { ascending: true });
+            const { data: replyRows, error: replyError } = await readWithFallback<ReplyRow[]>(
+              (client) =>
+                client
+                  .from("story_replies")
+                  .select("*")
+                  .order("created_at", { ascending: true }),
+            );
             if (!replyError && Array.isArray(replyRows)) {
               for (const r of replyRows) {
                 const key = String(r.story_id);
@@ -272,7 +329,7 @@ export async function getAllCerita(): Promise<CeritaItem[]> {
             created_at: row.created_at,
             replies: repliesByStory.get(String(row.id)) ?? [],
             is_vip: Boolean(row.is_vip),
-            vip_theme: row.vip_theme || undefined,
+            vip_theme: (row.vip_theme as VipTheme | null) || undefined,
             pinned_until: row.pinned_until || undefined,
             image_url: row.image_url || undefined,
             proof_image_url: row.proof_image_url || undefined,
@@ -289,7 +346,7 @@ export async function getAllCerita(): Promise<CeritaItem[]> {
   }
 
   // Strategy 2: Tabel `posts` dengan slug cerita-feed
-  if (remote === null && client) {
+  if (remote === null && (supabaseAdmin || supabasePublic)) {
     const items = await readCeritaFromPosts();
     if (items !== null) {
       remote = items.map((item) => ({

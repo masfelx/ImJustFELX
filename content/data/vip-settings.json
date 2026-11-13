@@ -1,0 +1,18 @@
+{
+  "quota": 495000,
+  "initial_quota": 500000,
+  "price_per_vip": 5000,
+  "qris_image_url": "/qris-felxstore.png",
+  "merchant": {
+    "name": "FELXSTORE",
+    "nmid": "ID1025408420731",
+    "store_id": "g373569475",
+    "city": "INDRAGIRI HULU",
+    "postal_code": "29351, 29371",
+    "printed_by": "93600914",
+    "raw_qris": "00020101021126610014COM.GO-JEK.WWW01189360091433735694750210G3735694750303UMI51440014ID.CO.QRIS.WWW0215ID10254084207310303UMI5204549953033605802ID5909felxstore6014INDRAGIRI HULU61052931162070703A016304A619"
+  },
+  "total_earned": 0,
+  "total_transactions": 0,
+  "transactions": []
+}

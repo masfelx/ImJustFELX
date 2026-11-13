@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Saweria",
+    "url": "https://saweria.co/MASF33L",
+    "description": "Traktir kopi atau dukung lewat QRIS, e-wallet, dan transfer bank.",
+    "icon": "coffee"
+  },
+  {
+    "name": "Sociabuzz",
+    "url": "https://sociabuzz.com/masf33l",
+    "description": "Dukungan berkelanjutan — bisa sekali bayar atau langganan bulanan.",
+    "icon": "spark"
+  },
+  {
+    "name": "Sibagi",
+    "url": "https://sibagi.com/masfel",
+    "description": "Bagikan dukunganmu lewat platform donasi karya dan konten lokal.",
+    "icon": "gift"
+  }
+]

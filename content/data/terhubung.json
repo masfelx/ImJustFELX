@@ -1,0 +1,30 @@
+{
+  "socials": [
+    {
+      "name": "Instagram",
+      "url": "https://www.instagram.com/feldiantrxahackim_/",
+      "icon": "instagram",
+      "handle": "@feldiantrxahackim_"
+    },
+    {
+      "name": "YouTube",
+      "url": "https://youtube.com/@username-kamu",
+      "icon": "youtube",
+      "handle": "@username-kamu"
+    },
+    {
+      "name": "TikTok",
+      "url": "https://www.tiktok.com/@masfel.id",
+      "icon": "tiktok",
+      "handle": "@masfel.id"
+    }
+  ],
+  "otherLinks": [
+    {
+      "name": "PointBlank Private Livara",
+      "url": "https://www.livara.my.id",
+      "description": "Aku Admin Disini, Bisa tanya ke aku",
+      "icon": "globe"
+    }
+  ]
+}

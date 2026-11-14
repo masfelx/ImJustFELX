@@ -10,17 +10,15 @@ type CommonProps = {
 
 const styles: Record<Variant, string> = {
   // Action Blue #0066cc, pill, 11px × 22px — sinyal aksi utama
-  primary:
-    "bg-primary text-white active:scale-95",
+  primary: "bg-primary text-white shadow-sm hover:brightness-105",
   // Ghost pill — CTA kedua ("Learn more" / "Buy" grammar)
-  ghost:
-    "text-primary border border-primary active:scale-95",
+  ghost: "text-primary border border-primary/80 hover:bg-primary/5",
 };
 
 const baseStyles =
-  "inline-flex items-center justify-center gap-2 rounded-pill px-[22px] py-[11px] text-body transition-transform duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-focus";
+  "relative overflow-hidden inline-flex items-center justify-center gap-2 rounded-pill px-[22px] py-[11px] text-body select-none transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-focus cursor-pointer";
 
-/** Tombol/pill gaya Apple untuk link internal (Next.js) */
+/** Tombol/pill gaya Apple untuk link internal (Next.js) dengan GSAP physics & tactile sheen */
 export function PillLink({
   href,
   variant = "primary",
@@ -36,6 +34,8 @@ export function PillLink({
     <Link
       href={href}
       prefetch={prefetch}
+      data-apple-btn="true"
+      data-magnetic="true"
       className={`${baseStyles} ${styles[variant]} ${className}`}
       {...rest}
     >
@@ -56,6 +56,8 @@ export function PillExternalLink({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      data-apple-btn="true"
+      data-magnetic="true"
       className={`${baseStyles} ${styles[variant]} ${className}`}
     >
       {children}

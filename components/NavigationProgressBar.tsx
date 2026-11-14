@@ -1,38 +1,56 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import gsap from "gsap";
 
 /**
- * Top Navigation Progress Bar ala Apple & GitHub.
- * Memberikan feedback visual seketika (instant feedback 0ms) saat user
- * mengklik link ke halaman lain, sehingga website terasa sangat cepat dan responsif.
+ * Top Navigation Progress Bar berbasis GSAP.
+ * Memberikan feedback visual seketika (0ms) saat user mengklik tautan internal.
+ * Animasi akselerasi fluida dengan glow laser Apple Action Blue (#0066cc).
  */
 export default function NavigationProgressBar() {
   const pathname = usePathname();
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
-  // Selesai loading saat pathname berubah (halaman baru selesai dimuat)
+  // Selesai navigasi saat pathname berubah (halaman baru selesai dimuat)
   useEffect(() => {
-    if (loading) {
-      setProgress(100);
-      const timer = setTimeout(() => {
-        setLoading(false);
-        setProgress(0);
-      }, 200);
-      return () => clearTimeout(timer);
+    const bar = barRef.current;
+    const container = containerRef.current;
+    if (!bar || !container) return;
+
+    if (timelineRef.current) {
+      timelineRef.current.kill();
+      timelineRef.current = null;
     }
+
+    // Meluncur mulus ke 100%, lalu fade-out lembut
+    gsap.timeline()
+      .to(bar, {
+        width: "100%",
+        duration: 0.22,
+        ease: "power2.out",
+      })
+      .to(container, {
+        opacity: 0,
+        duration: 0.28,
+        ease: "power2.inOut",
+        onComplete: () => {
+          gsap.set(bar, { width: "0%" });
+          gsap.set(container, { opacity: 0 });
+        },
+      });
   }, [pathname]);
 
-  // Pasang listener pada klik tautan internal
+  // Tangkap klik tautan internal untuk memicu progress bar seketika
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const target = (e.target as HTMLElement)?.closest("a");
       if (!target) return;
 
       const href = target.getAttribute("href");
-      // Hanya tangkap link internal
       if (
         !href ||
         href.startsWith("#") ||
@@ -47,19 +65,36 @@ export default function NavigationProgressBar() {
         return;
       }
 
-      // Jika url sama persis dengan halaman saat ini, abaikan
       const currentUrl = window.location.pathname + window.location.search;
       if (href === currentUrl || href === window.location.pathname) {
         return;
       }
 
-      // Mulai progress bar seketika
-      setLoading(true);
-      setProgress(25);
+      const bar = barRef.current;
+      const container = containerRef.current;
+      if (!bar || !container) return;
 
-      setTimeout(() => {
-        setProgress((prev) => (prev >= 25 && prev < 75 ? 70 : prev));
-      }, 100);
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+      }
+
+      // Reset & tampilkan
+      gsap.set(container, { opacity: 1 });
+      gsap.set(bar, { width: "0%" });
+
+      // Meluncur cepat ke 35%, lalu merayap halus ke 82% menunggu streaming RSC halaman baru
+      const tl = gsap.timeline();
+      tl.to(bar, {
+        width: "35%",
+        duration: 0.25,
+        ease: "power2.out",
+      }).to(bar, {
+        width: "82%",
+        duration: 2.4,
+        ease: "power1.out",
+      });
+
+      timelineRef.current = tl;
     };
 
     document.addEventListener("click", handleClick, { capture: true });
@@ -68,20 +103,15 @@ export default function NavigationProgressBar() {
     };
   }, []);
 
-  if (!loading && progress === 0) return null;
-
   return (
     <div
+      ref={containerRef}
       aria-hidden="true"
-      className="fixed top-0 left-0 right-0 z-50 h-[2.5px] pointer-events-none overflow-hidden"
+      className="fixed top-0 left-0 right-0 z-50 h-[2.5px] pointer-events-none opacity-0 overflow-hidden"
     >
       <div
-        className="h-full bg-gradient-to-r from-[#0066cc] via-[#2997ff] to-[#60a5fa] transition-all ease-out shadow-[0_0_8px_#2997ff]"
-        style={{
-          width: `${progress}%`,
-          transitionDuration: progress === 100 ? "150ms" : "300ms",
-          opacity: progress === 100 ? 0 : 1,
-        }}
+        ref={barRef}
+        className="h-full w-0 bg-gradient-to-r from-[#0066cc] via-[#2997ff] to-[#60a5fa] shadow-[0_0_12px_#2997ff,0_0_4px_#60a5fa]"
       />
     </div>
   );

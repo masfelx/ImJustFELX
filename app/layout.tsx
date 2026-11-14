@@ -5,6 +5,7 @@ import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
 import Footer from "@/components/Footer";
 import NavigationProgressBar from "@/components/NavigationProgressBar";
+import GsapMotionProvider from "@/components/GsapMotionProvider";
 import { getSiteData } from "@/lib/site-data";
 
 /* Inter = pengganti open-source terdekat untuk SF Pro di luar Apple.
@@ -50,6 +51,9 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col">
         <Suspense fallback={null}>
           <NavigationProgressBar />
+        </Suspense>
+        <Suspense fallback={null}>
+          <GsapMotionProvider />
         </Suspense>
         {/* Jika JavaScript dimatikan, konten ber-animasi tetap terlihat */}
         <noscript>

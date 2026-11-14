@@ -401,3 +401,45 @@ body {
   padding: 10px 12px;
   border-bottom: 1px solid var(--color-divider-soft);
 }
+
+/* ============================================================
+   APPLE-GRADE GSAP INTERACTION SYSTEM
+   Liquid glass tactile sheen & smooth spring physics
+   ============================================================ */
+.apple-glass-sheen {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.18) 40%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  mix-blend-mode: screen;
+  z-index: 20;
+}
+
+.apple-glass-sheen-dark {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(0, 102, 204, 0.32) 0%,
+    rgba(41, 151, 255, 0.16) 45%,
+    rgba(41, 151, 255, 0) 70%
+  );
+  z-index: 20;
+}
+
+/* Cegah seleksi teks yang tidak sengaja saat tombol ditekan */
+button,
+[role="button"],
+.rounded-pill {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+

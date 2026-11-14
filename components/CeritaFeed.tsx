@@ -1381,17 +1381,6 @@ export default function CeritaFeed() {
         )}
       </div>
 
-      {/* ── Feed Divider + Status ──────────────────────────── */}
-      <div className="flex items-center gap-3">
-        <div className="h-px flex-1 bg-hairline" />
-        <span className="text-fine text-ink-muted-48 font-medium uppercase tracking-wider">
-          Timeline
-        </span>
-        <span className="text-ink-muted-48">·</span>
-        <StatusBadge status={realtimeStatus} />
-        <div className="h-px flex-1 bg-hairline" />
-      </div>
-
       {/* ── Stories Feed ───────────────────────────────────── */}
       {loading ? (
         <CeritaSkeleton />
